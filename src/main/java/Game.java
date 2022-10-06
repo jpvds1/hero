@@ -11,10 +11,11 @@ import java.io.IOException;
 
 public class Game
 {
+    Arena arena = new Arena(40,20);
     private Screen screen;
     public boolean z = true;
 
-    Hero hero = new Hero(10, 10);
+
     public Game()
     {
         try
@@ -29,14 +30,15 @@ public class Game
             screen.startScreen();           // screens must be started
             screen.doResizeIfNecessary();   // resize screen if necessary
 
-            screen.clear();
-            screen.setCharacter(hero.get_x(), hero.get_y(), TextCharacter.fromCharacter('X')[0]);
-            screen.refresh();
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+    }
+    private void moveHero(Position position)
+    {
+        hero.setPosition(position);
     }
 
     private void processKey(com.googlecode.lanterna.input.KeyStroke key) throws IOException
@@ -44,23 +46,19 @@ public class Game
         // possibly case to switch case
         if (key.getKeyType() == KeyType.ArrowUp)
         {
-            System.out.println(key);
-            hero.set_y(hero.get_y()-1);
+            moveHero(hero.moveUp());
         }
         else if (key.getKeyType() == KeyType.ArrowDown)
         {
-            System.out.println(key);
-            hero.set_y(hero.get_y()+1);
+            moveHero(hero.moveDown());
         }
         else if (key.getKeyType() == KeyType.ArrowRight)
         {
-            System.out.println(key);
-            hero.set_x(hero.get_x()+1);
+            moveHero(hero.moveRight());
         }
         else if (key.getKeyType() == KeyType.ArrowLeft)
         {
-            System.out.println(key);
-            hero.set_x(hero.get_x()-1);
+            moveHero(hero.moveLeft());
         }
         else if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q')
         {
@@ -74,7 +72,7 @@ public class Game
     private void draw() throws IOException
     {
         screen.clear();
-        screen.setCharacter(hero.get_x(), hero.get_y(), TextCharacter.fromCharacter('X')[0]);
+        hero.draw(screen);
         screen.refresh();
     }
 
