@@ -12,9 +12,9 @@ import java.io.IOException;
 public class Game
 {
     private Screen screen;
-    private int x = 10;
-    private int y = 10;
-    private boolean z = true;
+    public boolean z = true;
+
+    Hero hero = new Hero(10, 10);
     public Game()
     {
         try
@@ -30,7 +30,7 @@ public class Game
             screen.doResizeIfNecessary();   // resize screen if necessary
 
             screen.clear();
-            screen.setCharacter(x, y, TextCharacter.fromCharacter('X')[0]);
+            screen.setCharacter(hero.get_x(), hero.get_y(), TextCharacter.fromCharacter('X')[0]);
             screen.refresh();
         }
         catch (IOException e)
@@ -45,22 +45,22 @@ public class Game
         if (key.getKeyType() == KeyType.ArrowUp)
         {
             System.out.println(key);
-            y -= 1;
+            hero.set_y(hero.get_y()-1);
         }
         else if (key.getKeyType() == KeyType.ArrowDown)
         {
             System.out.println(key);
-            y += 1;
+            hero.set_y(hero.get_y()+1);
         }
         else if (key.getKeyType() == KeyType.ArrowRight)
         {
             System.out.println(key);
-            x += 1;
+            hero.set_x(hero.get_x()+1);
         }
         else if (key.getKeyType() == KeyType.ArrowLeft)
         {
             System.out.println(key);
-            x -= 1;
+            hero.set_x(hero.get_x()-1);
         }
         else if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q')
         {
@@ -74,7 +74,7 @@ public class Game
     private void draw() throws IOException
     {
         screen.clear();
-        screen.setCharacter(x, y, TextCharacter.fromCharacter('X')[0]);
+        screen.setCharacter(hero.get_x(), hero.get_y(), TextCharacter.fromCharacter('X')[0]);
         screen.refresh();
     }
 
