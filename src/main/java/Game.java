@@ -13,7 +13,7 @@ public class Game
 {
     Arena arena = new Arena(40,20);
     private Screen screen;
-    public boolean z = true;
+    private boolean z = true;
 
 
     public Game()
@@ -36,43 +36,15 @@ public class Game
             e.printStackTrace();
         }
     }
-    private void moveHero(Position position)
-    {
-        hero.setPosition(position);
-    }
 
-    private void processKey(com.googlecode.lanterna.input.KeyStroke key) throws IOException
+    private void processKey(KeyStroke key) throws IOException
     {
-        // possibly case to switch case
-        if (key.getKeyType() == KeyType.ArrowUp)
-        {
-            moveHero(hero.moveUp());
-        }
-        else if (key.getKeyType() == KeyType.ArrowDown)
-        {
-            moveHero(hero.moveDown());
-        }
-        else if (key.getKeyType() == KeyType.ArrowRight)
-        {
-            moveHero(hero.moveRight());
-        }
-        else if (key.getKeyType() == KeyType.ArrowLeft)
-        {
-            moveHero(hero.moveLeft());
-        }
-        else if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q')
-        {
-            screen.close();
-        }
-        else if (key.getKeyType() == KeyType.EOF)
-        {
-            z = false;
-        }
+        arena.processKey(key);
     }
     private void draw() throws IOException
     {
         screen.clear();
-        hero.draw(screen);
+        arena.draw(screen);
         screen.refresh();
     }
 
