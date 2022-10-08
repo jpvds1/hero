@@ -1,4 +1,5 @@
 import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
@@ -52,9 +53,9 @@ public class Monster extends Element
     @Override
     public void draw(TextGraphics graphics)
     {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#00bf16"));
-        graphics.setForegroundColor(TextColor.Factory.fromString("#b80f0f"));
-        graphics.putString(new TerminalPosition(position.get_x(), position.get_y()), "M");
+
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#b80f0f"));
+        graphics.fillRectangle(new TerminalPosition(position.get_x(), position.get_y()), new TerminalSize(1, 1), ' ');
     }
     public void setPosition(Position position1)
     {

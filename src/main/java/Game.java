@@ -56,7 +56,7 @@ public class Game
             draw();
             KeyStroke key = screen.readInput();
             processKey(key);
-            if ((key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') || arena.DEATH == true)
+            if ((key.getKeyType() == KeyType.Character && key.getCharacter() == 'q'))
             {
                 screen.close();
             }

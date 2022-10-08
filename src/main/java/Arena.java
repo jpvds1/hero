@@ -23,6 +23,10 @@ public class Arena
     public List<Monster> monsters;
     public boolean DEATH = false;
     public TextGraphics graphics;
+    public boolean WIN = false;
+    public int MonsterNumber = 15;
+    public int CoinNumber = 10;
+    public int CoinSize;
 
     Hero hero = new Hero(10, 10);
     public Arena(int x1, int x2)
@@ -60,7 +64,14 @@ public class Arena
             }
             if (verifyMonsterCollisions(position) == true)
             {
-                DEATH = true;
+                if(hero.energy != 1)
+                {
+                    hero.energy--;
+                }
+                else
+                {
+                    DEATH = true;
+                }
             }
             hero.setPosition(position);
         }
@@ -116,7 +127,14 @@ public class Arena
             {
                 if(monster.posget().equals(position))
                 {
-                    DEATH = true;
+                    if(hero.energy != 1)
+                    {
+                        hero.energy--;
+                    }
+                    else
+                    {
+                        DEATH = true;
+                    }
                     return false;
                 }
             }
@@ -125,6 +143,11 @@ public class Arena
                 if(coin.posget().equals(position))
                 {
                     coins.remove(coin);
+                    hero.score++;
+                    if(hero.score == CoinSize)
+                    {
+                        WIN = true;
+                    }
                     break;
                 }
             }
@@ -157,21 +180,44 @@ public class Arena
 
     public void draw(TextGraphics graphics) throws IOException
     {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#00bf16"));
-        graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
-        hero.draw(graphics);
-        for (Wall wall : walls)
-            wall.draw(graphics);
-        for(Coin coin : coins)
-            coin.draw(graphics);
-        for(Monster monster : monsters)
-            monster.draw(graphics);
+        if(DEATH == false)
+        {
+            graphics.setBackgroundColor(TextColor.Factory.fromString("#00bf16"));
+            graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+            hero.draw(graphics);
+            for (Wall wall : walls)
+                wall.draw(graphics);
+            for(Coin coin : coins)
+                coin.draw(graphics);
+            for(Monster monster : monsters)
+                monster.draw(graphics);
+            graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
+            graphics.setForegroundColor(TextColor.Factory.fromString("#b80f0f"));
+            graphics.putString(new TerminalPosition(1, 0), "Energy = " + hero.energy);
+            graphics.putString(new TerminalPosition(1, height - 1), "Score = " + hero.score);
+        }
+        else if(DEATH)
+        {
+            graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
+            graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+            graphics.setForegroundColor(TextColor.Factory.fromString("#b80f0f"));
+            graphics.enableModifiers(SGR.BOLD);
+            graphics.putString(new TerminalPosition(width / 2 - 8, height / 2), "You got Kaoried");
+        }
+        if(WIN)
+        {
+            graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
+            graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+            graphics.setForegroundColor(TextColor.Factory.fromString("#00bf16"));
+            graphics.enableModifiers(SGR.BOLD);
+            graphics.putString(new TerminalPosition(width / 2 - 2, height / 2), "Y a y");
+        }
     }
     private List<Coin> createCoins()
     {
         Random random = new Random();
         ArrayList<Coin> coins = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < CoinNumber; i++)
         {
             Position p = new Position(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1);
             if (p.equals(hero.posget()))
@@ -195,7 +241,7 @@ public class Arena
     {
         Random random = new Random();
         ArrayList<Monster> monsters = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < MonsterNumber; i++)
         {
             Position p = new Position(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1);
             if (p.equals(hero.posget()))
@@ -221,7 +267,8 @@ public class Arena
             }
             monsters.add(new Monster(p.get_x(), p.get_y()));
         }
+        CoinSize = coins.size();
         return monsters;
     }
-    
+
 }
