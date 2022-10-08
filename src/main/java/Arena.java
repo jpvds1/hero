@@ -203,7 +203,8 @@ public class Arena
                 graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
                 graphics.setForegroundColor(TextColor.Factory.fromString("#00bf16"));
                 graphics.enableModifiers(SGR.BOLD);
-                graphics.putString(new TerminalPosition(width / 2 - 2, height / 2), "Y a y");
+                graphics.putString(new TerminalPosition(width / 2 - 2, height / 2), "Yay :)");
+                graphics.putString(new TerminalPosition(0, height - 1), "Press Q to leave");
             }
             else if(partial)
             {
@@ -246,7 +247,8 @@ public class Arena
             graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
             graphics.setForegroundColor(TextColor.Factory.fromString("#b80f0f"));
             graphics.enableModifiers(SGR.BOLD);
-            graphics.putString(new TerminalPosition(width / 2 - 8, height / 2), "You got Kaoried");
+            graphics.putString(new TerminalPosition(width / 2 - 8, height / 2), "You got Deaded");
+            graphics.putString(new TerminalPosition(0, height - 1), "Press Q to leave");
         }
     }
     private List<Coin> createCoins()
@@ -261,15 +263,20 @@ public class Arena
                 i--;
                 continue;
             }
+            boolean z = true;
             for (Coin c : coins)
             {
                 if (p.equals(c.posget()))
                 {
                     i--;
-                    continue;
+                    z = false;
+                    break;
                 }
             }
-            coins.add(new Coin(p.get_x(), p.get_y()));
+            if(z)
+            {
+                coins.add(new Coin(p.get_x(), p.get_y()));
+            }
         }
         return coins;
     }
@@ -285,12 +292,14 @@ public class Arena
                 i--;
                 continue;
             }
+            boolean z = true;
             for (Coin c : coins)
             {
                 if (p.equals(c.posget()))
                 {
                     i--;
-                    continue;
+                    z = false;
+                    break;
                 }
             }
             for (Monster monster : monsters)
@@ -298,10 +307,14 @@ public class Arena
                 if (p.equals(monster.posget()))
                 {
                     i--;
-                    continue;
+                    z = false;
+                    break;
                 }
             }
-            monsters.add(new Monster(p.get_x(), p.get_y()));
+            if(z)
+            {
+                monsters.add(new Monster(p.get_x(), p.get_y()));
+            }
         }
         CoinSize = coins.size();
         return monsters;

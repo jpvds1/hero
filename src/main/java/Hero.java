@@ -35,6 +35,6 @@ public class Hero extends Element
     }
     public void setPosition(Position position1)
     {
-       position = position1;
+        position = position1;
     }
 }
