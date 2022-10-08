@@ -5,8 +5,6 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +25,8 @@ public class Arena
     public int MonsterNumber = 15;
     public int CoinNumber = 10;
     public int CoinSize;
+    public boolean partial = false;
+    Position door;
 
     Hero hero = new Hero(10, 10);
     public Arena(int x1, int x2)
@@ -52,17 +52,17 @@ public class Arena
     }
     public void moveHero(Position position) throws IOException
     {
-        if(canHeroMove(position) == true)
+        if(canHeroMove(position))
         {
             for(Monster monster : monsters)
             {
                 Position position1 = monster.move(monster.posget());
-                if(canMonsterMove(position1) == true)
+                if(canMonsterMove(position1))
                 {
                     monster.setPosition(position1);
                 }
             }
-            if (verifyMonsterCollisions(position) == true)
+            if (verifyMonsterCollisions(position))
             {
                 if(hero.energy != 1)
                 {
@@ -146,14 +146,29 @@ public class Arena
                     hero.score++;
                     if(hero.score == CoinSize)
                     {
-                        WIN = true;
+                        partial = true;
+                        doorgenerator();
                     }
                     break;
+                }
+            }
+            if(partial)
+            {
+                if(position.equals(door))
+                {
+                    WIN = true;
                 }
             }
             return true;
         }
         return false;
+    }
+    private void doorgenerator()
+    {
+        Random random = new Random();
+        int r = random.nextInt(2,height);
+        int r2 = random.nextInt(2, width);
+        door = new Position(r2, r);
     }
     private boolean canMonsterMove(Position position)
     {
@@ -180,37 +195,58 @@ public class Arena
 
     public void draw(TextGraphics graphics) throws IOException
     {
-        if(DEATH == false)
+        if(!DEATH)
         {
-            graphics.setBackgroundColor(TextColor.Factory.fromString("#00bf16"));
-            graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
-            hero.draw(graphics);
-            for (Wall wall : walls)
-                wall.draw(graphics);
-            for(Coin coin : coins)
-                coin.draw(graphics);
-            for(Monster monster : monsters)
-                monster.draw(graphics);
-            graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
-            graphics.setForegroundColor(TextColor.Factory.fromString("#b80f0f"));
-            graphics.putString(new TerminalPosition(1, 0), "Energy = " + hero.energy);
-            graphics.putString(new TerminalPosition(1, height - 1), "Score = " + hero.score);
+            if(WIN)
+            {
+                graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
+                graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+                graphics.setForegroundColor(TextColor.Factory.fromString("#00bf16"));
+                graphics.enableModifiers(SGR.BOLD);
+                graphics.putString(new TerminalPosition(width / 2 - 2, height / 2), "Y a y");
+            }
+            else if(partial)
+            {
+                graphics.setBackgroundColor(TextColor.Factory.fromString("#00bf16"));
+                graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+                graphics.setBackgroundColor(TextColor.Factory.fromString("#ffffff"));
+                graphics.fillRectangle(new TerminalPosition(door.get_x(), door.get_y()), new TerminalSize(1, 1), ' ');
+                hero.draw(graphics);
+                for (Wall wall : walls)
+                    wall.draw(graphics);
+                for(Coin coin : coins)
+                    coin.draw(graphics);
+                for(Monster monster : monsters)
+                    monster.draw(graphics);
+                graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
+                graphics.setForegroundColor(TextColor.Factory.fromString("#b80f0f"));
+                graphics.putString(new TerminalPosition(1, 0), "Energy = " + hero.energy);
+                graphics.putString(new TerminalPosition(1, height - 1), "Score = " + hero.score);
+            }
+            else
+            {
+                graphics.setBackgroundColor(TextColor.Factory.fromString("#00bf16"));
+                graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+                hero.draw(graphics);
+                for (Wall wall : walls)
+                    wall.draw(graphics);
+                for(Coin coin : coins)
+                    coin.draw(graphics);
+                for(Monster monster : monsters)
+                    monster.draw(graphics);
+                graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
+                graphics.setForegroundColor(TextColor.Factory.fromString("#b80f0f"));
+                graphics.putString(new TerminalPosition(1, 0), "Energy = " + hero.energy);
+                graphics.putString(new TerminalPosition(1, height - 1), "Score = " + hero.score);
+            }
         }
-        else if(DEATH)
+        else
         {
             graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
             graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
             graphics.setForegroundColor(TextColor.Factory.fromString("#b80f0f"));
             graphics.enableModifiers(SGR.BOLD);
             graphics.putString(new TerminalPosition(width / 2 - 8, height / 2), "You got Kaoried");
-        }
-        if(WIN)
-        {
-            graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
-            graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
-            graphics.setForegroundColor(TextColor.Factory.fromString("#00bf16"));
-            graphics.enableModifiers(SGR.BOLD);
-            graphics.putString(new TerminalPosition(width / 2 - 2, height / 2), "Y a y");
         }
     }
     private List<Coin> createCoins()
