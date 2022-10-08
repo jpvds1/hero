@@ -1,5 +1,6 @@
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
@@ -16,8 +17,10 @@ public class Wall extends Element
     @Override
     public void draw(TextGraphics graphics)
     {
-        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
-        graphics.putString(new TerminalPosition(position.get_x(), position.get_y()), "W");
+
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
+        graphics.fillRectangle(new TerminalPosition(position.get_x(), position.get_y()), new TerminalSize(1, 1), ' ');
+
     }
 
     public Position posget()

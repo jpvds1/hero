@@ -16,11 +16,12 @@ public class Game
 
 
 
+
     public Game()
     {
         try
         {
-            TerminalSize terminalSize = new TerminalSize(40, 20);
+            TerminalSize terminalSize = new TerminalSize(arena.width, arena.height);
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
             Terminal terminal = terminalFactory.createTerminal();
 
@@ -55,6 +56,10 @@ public class Game
             draw();
             KeyStroke key = screen.readInput();
             processKey(key);
+            if ((key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') || arena.DEATH == true)
+            {
+                screen.close();
+            }
         }
     }
 }
