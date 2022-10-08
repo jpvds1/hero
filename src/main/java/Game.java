@@ -13,7 +13,7 @@ public class Game
 {
     Arena arena = new Arena(40,20);
     private Screen screen;
-    private boolean z = true;
+
 
 
     public Game()
@@ -44,13 +44,13 @@ public class Game
     private void draw() throws IOException
     {
         screen.clear();
-        arena.draw(screen);
+        arena.draw(screen.newTextGraphics());
         screen.refresh();
     }
 
     public void run() throws IOException
     {
-        while(z)
+        while(arena.z)
         {
             draw();
             KeyStroke key = screen.readInput();
