@@ -59,6 +59,10 @@ public class Game
             {
                 screen.close();
             }
+            else if ((key.getKeyType() == KeyType.Character && key.getCharacter() == 'r'))
+            {
+                arena = new Arena(40,20);
+            }
         }
     }
 }

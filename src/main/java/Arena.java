@@ -204,7 +204,8 @@ public class Arena
                 graphics.setForegroundColor(TextColor.Factory.fromString("#00bf16"));
                 graphics.enableModifiers(SGR.BOLD);
                 graphics.putString(new TerminalPosition(width / 2 - 2, height / 2), "Yay :)");
-                graphics.putString(new TerminalPosition(0, height - 1), "Press Q to leave");
+                graphics.putString(new TerminalPosition(0, height - 2), "Press Q to leave");
+                graphics.putString(new TerminalPosition(0, height - 1), "or R to restart");
             }
             else if(partial)
             {
@@ -248,7 +249,8 @@ public class Arena
             graphics.setForegroundColor(TextColor.Factory.fromString("#b80f0f"));
             graphics.enableModifiers(SGR.BOLD);
             graphics.putString(new TerminalPosition(width / 2 - 8, height / 2), "You got Deaded");
-            graphics.putString(new TerminalPosition(0, height - 1), "Press Q to leave");
+            graphics.putString(new TerminalPosition(0, height - 2), "Press Q to leave");
+            graphics.putString(new TerminalPosition(0, height - 1), "or R to restart");
         }
     }
     private List<Coin> createCoins()
